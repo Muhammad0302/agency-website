@@ -1,7 +1,24 @@
-import React from "react";
+import axios from "axios";
+import React, { useState, useEffect } from "react";
 
-const trending = () => {
-  return <div>trending</div>;
+const Trending = () => {
+  const [content, setContent] = useState([]);
+  const fetchTrending = async () => {
+    const { data } = await axios.get(
+      `https://api.themoviedb.org/3/trending/all/day?api_key=${process.env.REACT_APP_API_KEY}`
+    );
+    console.log(data);
+    setContent(data.results);
+  };
+  useEffect(() => {
+    fetchTrending();
+  }, []);
+
+  return (
+    <div>
+      <span className="pageTitle">trending</span>
+    </div>
+  );
 };
 
-export default trending;
+export default Trending;
