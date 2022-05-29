@@ -23,6 +23,7 @@ const Genra = ({
     const { data } = await axios.get(
       `https://api.themoviedb.org/3/genre/${type}/list?api_key=${process.env.REACT_APP_API_KEY}&language=en-US`
     );
+
     setGenres(data.genres);
   };
   useEffect(() => {
@@ -33,11 +34,36 @@ const Genra = ({
     // eslint-disable-next-line
   }, []);
 
+  const handleAdd = (genre) => {
+    setSelectedGenres([...selectedGenres, genre]);
+    setGenres(genres.filter((g) => g.id !== genre.id));
+    setPage(1);
+  };
+  const handleDelete = (genre) => {
+    setGenres([...genres, genre]);
+    setSelectedGenres(
+      selectedGenres.filter((selected) => selected.id !== genre.id)
+    );
+    setPage(1);
+  };
+
   return (
     <div style={{ padding: "6px 0" }}>
+      {selectedGenres &&
+        selectedGenres.map((genre) => (
+          <Chip
+            clickable
+            size="small"
+            key={genre.id}
+            label={genre.name}
+            style={{ margin: "2px" }}
+            color="primary"
+            onDelete={() => handleDelete(genre)}
+          />
+        ))}
       {genres &&
         genres.map((genre) => (
-          <ThemeProvider theme={colorTheme}>
+          <ThemeProvider key={genre.id} theme={colorTheme}>
             <Chip
               clickable
               size="small"
@@ -45,6 +71,7 @@ const Genra = ({
               label={genre.name}
               style={{ margin: "2px" }}
               color="primary"
+              onClick={() => handleAdd(genre)}
             />
           </ThemeProvider>
         ))}
