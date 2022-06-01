@@ -29,7 +29,9 @@ const Genra = ({
   useEffect(() => {
     fetchGenra();
     return () => {
-      setGenres({}); // unmounting
+      setGenres([]); // unmounting
+      //will give you error like map is not a function
+      // setGenres({}); // unmounting
     };
     // eslint-disable-next-line
   }, []);
@@ -49,8 +51,19 @@ const Genra = ({
 
   return (
     <div style={{ padding: "6px 0" }}>
-      {selectedGenres &&
-        selectedGenres.map((genre) => (
+      {selectedGenres.map((genre) => (
+        <Chip
+          clickable
+          size="small"
+          key={genre.id}
+          label={genre.name}
+          style={{ margin: "2px" }}
+          color="primary"
+          onDelete={() => handleDelete(genre)}
+        />
+      ))}
+      {genres.map((genre) => (
+        <ThemeProvider key={genre.id} theme={colorTheme}>
           <Chip
             clickable
             size="small"
@@ -58,23 +71,10 @@ const Genra = ({
             label={genre.name}
             style={{ margin: "2px" }}
             color="primary"
-            onDelete={() => handleDelete(genre)}
+            onClick={() => handleAdd(genre)}
           />
-        ))}
-      {genres &&
-        genres.map((genre) => (
-          <ThemeProvider key={genre.id} theme={colorTheme}>
-            <Chip
-              clickable
-              size="small"
-              key={genre.id}
-              label={genre.name}
-              style={{ margin: "2px" }}
-              color="primary"
-              onClick={() => handleAdd(genre)}
-            />
-          </ThemeProvider>
-        ))}
+        </ThemeProvider>
+      ))}
     </div>
   );
 };
